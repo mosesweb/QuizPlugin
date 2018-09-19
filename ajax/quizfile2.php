@@ -1,40 +1,32 @@
 	
-		<div class="wordpage"><!-- Version 2 -->
-		<?php 
-		$mysqli = new mysqli("", "", "", "");
-		if ($mysqli->connect_errno) {
-			echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-		}
-		mysqli_set_charset($mysqli,"utf8");
-		
-		$moretext = "<h1 class=\"quizheadline\">$current_catname Vocabulary Quiz</h1> | <a href=\"/words/$whatcategory\" target=\"_blank\">Word List</a>";
-		if($quiz_extra != NULL)
-		{
-			$moretext .= "<div class=\"quiz-extra\">" . $quiz_extra . "</div>";
-		}
-		echo "<div class=\"quizheader\">$moretext
-		</div>"; ?>
-		<?php
-		// https://codex.wordpress.org/Rewrite_API/add_rewrite_rule
-		$category_variable = $whatcategory;
-		if(!isset($category_variable) || empty($category_variable))
-		{
-			$category_variable = "sea_animals";
-		}
-		$sql = "
-		SELECT word.japanese, word.meaning, word.kanji, word.romaji, word.japanese, word.image, word.image_author, word.imgauthor_link, word.id as WID, 
-		categories.name, categories.slug_name 
-		FROM word
-		INNER JOIN wordcategories 
-		ON word.id = wordcategories.word_id
-		INNER JOIN categories
-		ON categories.id = wordcategories.category_id
-		WHERE categories.slug_name = '$category_variable'";
+<div class="wordpage"><!-- Version 2 -->
+<?php
+$wpdb->set_charset($wpdb->dbh,"utf8");
+$moretext = "<h1 class=\"quizheadline\">$current_catname Vocabulary Quiz</h1> | <a href=\"/words/$whatcategory\" target=\"_blank\">Word List</a>";
+if($quiz_extra != NULL)
+{
+	$moretext .= "<div class=\"quiz-extra\">" . $quiz_extra . "</div>";
+}
+echo "<div class=\"quizheader\">$moretext
+</div>"; ?>
+<?php
+// https://codex.wordpress.org/Rewrite_API/add_rewrite_rule
+$category_variable = $whatcategory;
+if(!isset($category_variable) || empty($category_variable))
+{
+	$category_variable = "sea_animals";
+}
+$sql = "
+SELECT word.japanese, word.meaning, word.kanji, word.romaji, word.japanese, word.image, word.image_author, word.imgauthor_link, word.id as WID, 
+categories.name, categories.slug_name 
+FROM word
+INNER JOIN wordcategories 
+ON word.id = wordcategories.word_id
+INNER JOIN categories
+ON categories.id = wordcategories.category_id
+WHERE categories.slug_name = '$category_variable'";
 
-//$myrows = $wpdb->get_results( $sql, ARRAY_A);
-$rresult = $mysqli->query($sql);
-
-$myrows = $rresult->fetch_all(MYSQLI_ASSOC);
+$myrows = $wpdb->get_results( $sql, ARRAY_A);
 
 $array_max = $rresult->num_rows - 1; // so we dont check for non existent which is over last element (0 takes up first row)
 $amountofquestions = $rresult->num_rows; // amount of questions

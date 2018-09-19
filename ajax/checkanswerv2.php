@@ -18,16 +18,11 @@ class SimpleYetPowerfulQuiz_CheckAnswer extends SimpleYetPowerfulQuiz_Plugin {
 	//" . $question . "' AND japanese = '" . $answer . "'";
 	if(isset($question) && isset($answer) && isset($category))
 	{
-		// Connect to DB
-		$mysqli = new mysqli("", ", "", "");
-		if ($mysqli->connect_errno) {
-			echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-		}
 		// must fix japanese utf
-		mysqli_set_charset($mysqli,"utf8");
-		$question = $mysqli->real_escape_string($question);
-		$answer = $mysqli->real_escape_string($answer);
-		$category = $mysqli->real_escape_string($category);
+		$wpdb->set_charset($wpdb->dbh,"utf8");
+		$question = $wpdb->_real_escape($question);
+		$answer = $wpdb->_real_escape($answer);
+		$category = $wpdb->_real_escape($category);
 
 		$countQuestionsSQL = "
 		SELECT COUNT(*) AS count, $cattable.id AS categoryquizid FROM $wordtable
@@ -78,7 +73,6 @@ class SimpleYetPowerfulQuiz_CheckAnswer extends SimpleYetPowerfulQuiz_Plugin {
 			$arr['result'] = 'correct';
 			foreach($result as $correctrow)
 			{
-				//$corrrow = $result->fetch_array(MYSQLI_ASSOC);
 				$arr['correct_answer'] = $correctrow['japanese'];
 				$arr['japanese'] = $correctrow['japanese'];
 				$arr['kana'] = $correctrow['kana'];
@@ -89,11 +83,8 @@ class SimpleYetPowerfulQuiz_CheckAnswer extends SimpleYetPowerfulQuiz_Plugin {
 		}
 		else
 		{
-			// select correct answer (where meaning is question)
-			//$correct_result = $mysqli->query( $sql2);	
 			$result2 = $wpdb->get_results( $sql2, ARRAY_A);	
 			$arr['result'] = 'wrong';
-			//$corrrow = $correct_result->fetch_array(MYSQLI_ASSOC);
 			foreach($result2 as $corrrow)
 			{
 				$arr['correct_answer'] = $corrrow['japanese'];
@@ -132,8 +123,9 @@ public function LogResult($correctanswersgiven, $mistakeanswersgiven, $lcategory
 	}
 	$totalqs = 0;
 	//$score = ($correctanswersgiven/$lamountofq)*100;
-	$sqlloguserscore = "INSERT INTO ` $resulttable` (`id`, `goicategory_id`, `procent_correctness`, `message`, `user_id`) VALUES (NULL, '$categoryid', '$proctotal', 'hej', '".get_current_user_id()."');";
+	$sqlloguserscore = "INSERT INTO `$resulttable` (`id`, `goicategory_id`, `procent_correctness`, `message`, `user_id`) VALUES (NULL, '$categoryid', '$proctotal', 'hej', '".get_current_user_id()."');";
 	$wpdb->query($sqlloguserscore);
+	var_dump($wpdb);
 	echo $sqlloguserscore;
 	
 }

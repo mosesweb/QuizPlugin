@@ -29,15 +29,8 @@ class SimpleYetPowerfulQuiz_QuizShortCode extends SimpleYetPowerfulQuiz_ShortCod
     ?>
     <div class="wordpage"><!-- Version 2 -->
     <?php 
-    $mysqli = new mysqli("", "", "", "");
-    if ($mysqli->connect_errno) {
-        echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-    }
-    mysqli_set_charset($mysqli,"utf8");
-    
+    $wpdb->set_charset($wpdb->dbh,"utf8");
     $vocabmode = $atts['order'];
-
-    
 
     $moretext = "<h1 class=\"quizheadline\">$current_catname Vocabulary Quiz</h1> | <a href=\"/words/$quiz_category\" target=\"_blank\">Word List</a>";
     if($quiz_extra != NULL)
@@ -90,10 +83,6 @@ class SimpleYetPowerfulQuiz_QuizShortCode extends SimpleYetPowerfulQuiz_ShortCod
     WHERE $cattable.slug_name = '$quiz_category'";
 
 $myrows = $wpdb->get_results( $sqlv2, ARRAY_A);
-
-//$rresult = $mysqli->query($sql);
-
-//$myrows = $rresult->fetch_all(MYSQLI_ASSOC);
 
 $array_max = $wpdb->num_rows - 1; // so we dont check for non existent which is over last element (0 takes up first row)
 $amountofquestions = $wpdb->num_rows; // amount of questions

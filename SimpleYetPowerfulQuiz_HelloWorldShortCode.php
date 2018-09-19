@@ -13,12 +13,8 @@ class SimpleYetPowerfulQuiz_HelloWorldShortCode extends SimpleYetPowerfulQuiz_Sh
     ob_start();
     ?>
     <div class="wordpage"><!-- Version 2 -->
-    <?php 
-    $mysqli = new mysqli("", "", "", "");
-    if ($mysqli->connect_errno) {
-        echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-    }
-    mysqli_set_charset($mysqli,"utf8");
+    <?php
+    $wpdb->set_charset($wpdb->dbh,"utf8");
     
     if(!isset($category_variable) || empty($category_variable))
     {
@@ -47,11 +43,7 @@ class SimpleYetPowerfulQuiz_HelloWorldShortCode extends SimpleYetPowerfulQuiz_Sh
     ON categories.id = wordcategories.category_id
     WHERE categories.slug_name = '$category_variable'";
 
-//$myrows = $wpdb->get_results( $sql, ARRAY_A);
-$rresult = $mysqli->query($sql);
-
-$myrows = $rresult->fetch_all(MYSQLI_ASSOC);
-
+$myrows = $wpdb->get_results( $sql, ARRAY_A);
 $array_max = $rresult->num_rows - 1; // so we dont check for non existent which is over last element (0 takes up first row)
 $amountofquestions = $rresult->num_rows; // amount of questions
 $number = 0;
