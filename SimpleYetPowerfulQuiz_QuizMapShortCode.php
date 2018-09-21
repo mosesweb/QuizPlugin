@@ -42,23 +42,6 @@ class SimpleYetPowerfulQuiz_QuizMapShortCode extends SimpleYetPowerfulQuiz_Short
     $catgrouptable = $simpleplug->prefixTableName('goicatgroup');
     $catwordtable = $simpleplug->prefixTableName('goiwordcategories');
 
-    ob_start();
-    ?>
-    <div class="wordpage"><!-- Version 2 -->
-    <?php 
-    $wpdb->set_charset($wpdb->dbh,"utf8");
-    $vocabmode = $atts['order'];
-
-    $moretext = "<h1 class=\"quizheadline\">$current_catname Vocabulary Quiz</h1> | <a href=\"/words/$quiz_category\" target=\"_blank\">Word List</a>";
-    if($quiz_extra != NULL)
-    {
-        $moretext .= "<div class=\"quiz-extra\">" . $quiz_extra . "</div>";
-    }
-    echo "<div class=\"quizheader\"><div class=\"vocabname\">$quiz_category</div>
-    <div class=\"vocabmode\">$vocabmode</div>
-    $moretext
-    </div>"; ?>
-    <?php
     // https://codex.wordpress.org/Rewrite_API/add_rewrite_rule
 
 
@@ -73,9 +56,11 @@ class SimpleYetPowerfulQuiz_QuizMapShortCode extends SimpleYetPowerfulQuiz_Short
     $wordtable.image_author, 
     $wordtable.imgauthor_link, 
     $wordtable.id as WID, 
-    $catgrouptable.name, 
-    $catgrouptable.slug_name 
-    
+    $catgrouptable.name AS mapname,
+    $cattable.name AS qname, 
+    $catgrouptable.slug_name,
+    $cattable.id AS qid
+
     FROM $wordtable
     
     INNER JOIN $catwordtable 
@@ -87,13 +72,43 @@ class SimpleYetPowerfulQuiz_QuizMapShortCode extends SimpleYetPowerfulQuiz_Short
     INNER JOIN $catgrouptable
     ON $catgrouptable.id = $cattable.group_id
     
-    WHERE $catgrouptable.slug_name = '$quiz_category'";
+    WHERE $catgrouptable.slug_name = '$quiz_category'
+    
+    ORDER BY $cattable.id
+    ";
+    
 
-$myrows = $wpdb->get_results( $sqlv2, ARRAY_A);
+    $myrows = $wpdb->get_results( $sqlv2, ARRAY_A);
 
-$array_max = $wpdb->num_rows - 1; // so we dont check for non existent which is over last element (0 takes up first row)
-$amountofquestions = $wpdb->num_rows; // amount of questions
-$number = 0;
+    $array_max = $wpdb->num_rows - 1; // so we dont check for non existent which is over last element (0 takes up first row)
+    $amountofquestions = $wpdb->num_rows; // amount of questions
+        $number = 0;
+
+    $mapname = $myrows[0]["mapname"];
+    $pids = array();
+    foreach ($myrows as $h) {
+        $pids[] = $h['qid'];
+    }
+    $uniquePids = array_unique($pids);
+    $numberoflevels = count($uniquePids);
+
+    ob_start();
+    ?>
+    <div class="wordpage"><!-- Version 2 -->
+    <?php 
+    $wpdb->set_charset($wpdb->dbh,"utf8");
+    $vocabmode = $atts['order'];
+
+    $moretext = "<h1 class=\"quizheadline\"><b>$mapname</b> vocabulary Quiz</h1> | <a href=\"/words/$quiz_category\" target=\"_blank\">Word List</a>";
+    if($quiz_extra != NULL)
+    {
+        $moretext .= "<div class=\"quiz-extra\">" . $quiz_extra . "</div>";
+    }
+    echo "<div class=\"quizheader\"><div class=\"vocabname\">$quiz_category</div>
+    <div class=\"vocabmode\">$vocabmode</div>
+    $moretext
+    </div>"; ?>
+    <?php
 
 if($wpdb->num_rows > 0)
 {
@@ -121,7 +136,7 @@ foreach($myrows as $row)
     echo "<div class=\"answer-options box-$number\">";
     echo "<div class=\"question\">";
     echo"
-    <div class=\"questionnumber\">Question <span class=\"current-q\">$number</span> / <span class=\"total-q\">$amountofquestions</span>. </div>
+    <div class=\"questionnumber\"><b>" . $row['qname']. "</b> Question <span class=\"current-q\">$number</span> / <span class=\"total-q\">$amountofquestions</span>. Levels: $numberoflevels</div>
     <div class=\"questiontext\">What is <span class=\"questionword\">" . $row['meaning'] . "</span> in Japanese?</div>
     <div class=\"clear\"></div></div>";
 

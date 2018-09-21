@@ -101,6 +101,7 @@ class SimpleYetPowerfulQuiz_Plugin extends SimpleYetPowerfulQuiz_LifeCycle {
             `help_tools` tinyint(1) DEFAULT '0',
             `random_order` tinyint(1) DEFAULT '0',
             `quiz_image_show` tinyint(1) DEFAULT '1',
+            `order` int(11) DEFAULT '0',
             PRIMARY KEY (`id`)
           )
           ");
