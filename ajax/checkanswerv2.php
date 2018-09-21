@@ -11,6 +11,7 @@ class SimpleYetPowerfulQuiz_CheckAnswer extends SimpleYetPowerfulQuiz_Plugin {
 	global $wpdb;
 	$wordtable = $simpleplug->prefixTableName('goiword');
 	$cattable = $simpleplug->prefixTableName('goicategories');
+	$catgroup = $simpleplug->prefixTableName('goicatgroup');
 	$catwordtable = $simpleplug->prefixTableName('goiwordcategories');
 	$resulttable = $simpleplug->prefixTableName('goiresults');
 	$categoryQuizId = 0;
@@ -28,8 +29,9 @@ class SimpleYetPowerfulQuiz_CheckAnswer extends SimpleYetPowerfulQuiz_Plugin {
 		SELECT COUNT(*) AS count, $cattable.id AS categoryquizid FROM $wordtable
 		INNER JOIN $catwordtable ON $wordtable.id = $catwordtable.word_id
 		INNER JOIN $cattable ON $cattable.id = $catwordtable.category_id
+		INNER JOIN $catgroup ON $catgroup.id = $cattable.group_id
 		WHERE 
-		$cattable.slug_name = '". $category ."'";
+		$catgroup.slug_name = '". $category ."'";
 		$numberOfQResult = $wpdb->get_results( $countQuestionsSQL, ARRAY_A);
 		$numberofQuestions = 0;
 		foreach($numberOfQResult as $c)
@@ -46,8 +48,9 @@ class SimpleYetPowerfulQuiz_CheckAnswer extends SimpleYetPowerfulQuiz_Plugin {
 			SELECT * FROM $wordtable
 			INNER JOIN $catwordtable ON $wordtable.id = $catwordtable.word_id
 			INNER JOIN $cattable ON $cattable.id = $catwordtable.category_id
+			INNER JOIN $catgroup ON $catgroup.id = $cattable.group_id
 			WHERE 
-			$cattable.slug_name = '". $category ."' AND meaning = '" . $question . "' AND japanese = '" . $answer . "'";
+			$catgroup.slug_name = '". $category ."' AND meaning = '" . $question . "' AND japanese = '" . $answer . "'";
 			
 			$sql2 = "SELECT * FROM $wordtable WHERE meaning = '" . $question . "' LIMIT 1";
 			break;
@@ -111,11 +114,15 @@ public function LogResult($correctanswersgiven, $mistakeanswersgiven, $lcategory
 	global $wpdb;
 	$wordtable = $simpleplug->prefixTableName('goiword');
 	$cattable = $simpleplug->prefixTableName('goicategories');
+	$catgroup = $simpleplug->prefixTableName('goicatgroup');
 	$catwordtable = $simpleplug->prefixTableName('goiwordcategories');
 	$resulttable = $simpleplug->prefixTableName('goiresults');
 	$categoryid = null;
 
-	$lcategoryIDresult = $wpdb->get_results( "SELECT id FROM $cattable WHERE $cattable.slug_name = '$lcategory'", ARRAY_A);
+	$lcategoryIDresult = $wpdb->get_results( 
+		"SELECT id FROM $cattable 
+		WHERE $cattable.slug_name = '$lcategory'", ARRAY_A);
+		
 	$numberofQuestions = 0;
 	foreach($lcategoryIDresult as $cate)
 	{
@@ -133,21 +140,34 @@ public function LogResult($correctanswersgiven, $mistakeanswersgiven, $lcategory
 }
 $checkObj = new SimpleYetPowerfulQuiz_CheckAnswer();
 
-$question = $_POST['whatquest'];
-$category = $_POST['whatcategory'];
-$answer = $_POST['answer'];
-$whatmode = $_POST['mode'];
-$qnumber = $_POST['qnumber'];
+if(isset($_POST['whatquest']))
+{
+	$question = $_POST['whatquest'];
+	$category = $_POST['whatcategory'];
+	$answer = $_POST['answer'];
+	$whatmode = $_POST['mode'];
+	$qnumber = $_POST['qnumber'];
 
+	$checkObj->CheckAnswer($question, $category, $answer, $whatmode, $qnumber);
 
-$correctanswersgiven = $_POST['ca'];
-$mistakeanswersgiven = $_POST['ma'];
-$lcategory = $_POST['lcategory'];
-$lamountofq = $_POST['lamountofq'];
-$proctotal = $_POST['proctotal'];
+}
+if(isset($_POST['ca']))
+	$correctanswersgiven = $_POST['ca'];
 
-$checkObj->CheckAnswer($question, $category, $answer, $whatmode, $qnumber);
+if(isset($_POST['ma']))
+	$mistakeanswersgiven = $_POST['ma'];
+
+if(isset($_POST['lcategory']))
+	$lcategory = $_POST['lcategory'];
+
+if(isset($_POST['lamountofq']))
+	$lamountofq = $_POST['lamountofq'];
+
+if(isset($_POST['proctotal']))
+	$proctotal = $_POST['proctotal'];
+
 //ca: corr, ma: mist, lcategory: tcatname, lamountofq: lamountofq, proctotal: theproctotal
+
 if(isset($correctanswersgiven) && isset($mistakeanswersgiven) && isset($lcategory) && isset($proctotal))
 {
 	$checkObj->LogResult($correctanswersgiven, $mistakeanswersgiven, $lcategory, $lamountofq, $proctotal);

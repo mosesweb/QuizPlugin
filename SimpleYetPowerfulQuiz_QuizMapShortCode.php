@@ -91,8 +91,9 @@ class SimpleYetPowerfulQuiz_QuizMapShortCode extends SimpleYetPowerfulQuiz_Short
     }
     $uniquePids = array_unique($pids);
     $numberoflevels = count($uniquePids);
-
+    $quiz_extra = "";
     ob_start();
+
     ?>
     <div class="wordpage"><!-- Version 2 -->
     <?php 

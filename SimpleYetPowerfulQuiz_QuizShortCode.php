@@ -41,13 +41,15 @@ class SimpleYetPowerfulQuiz_QuizShortCode extends SimpleYetPowerfulQuiz_ShortCod
     $cattable = $simpleplug->prefixTableName('goicategories');
     $catwordtable = $simpleplug->prefixTableName('goiwordcategories');
 
+
     ob_start();
     ?>
     <div class="wordpage"><!-- Version 2 -->
     <?php 
     $wpdb->set_charset($wpdb->dbh,"utf8");
     $vocabmode = $atts['order'];
-
+    $current_catname = "";
+    $quiz_extra = "";
     $moretext = "<h1 class=\"quizheadline\">$current_catname Vocabulary Quiz</h1> | <a href=\"/words/$quiz_category\" target=\"_blank\">Word List</a>";
     if($quiz_extra != NULL)
     {
