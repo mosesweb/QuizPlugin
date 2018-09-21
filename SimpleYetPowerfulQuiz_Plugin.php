@@ -122,6 +122,7 @@ class SimpleYetPowerfulQuiz_Plugin extends SimpleYetPowerfulQuiz_LifeCycle {
             `procent_correctness` float DEFAULT '0',
             `message` text,
             `user_id` int(11) DEFAULT NULL,
+            `result_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (`id`)
           );");
 

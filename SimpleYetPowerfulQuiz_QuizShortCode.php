@@ -6,8 +6,24 @@ class SimpleYetPowerfulQuiz_QuizShortCode extends SimpleYetPowerfulQuiz_ShortCod
     * @param  $atts shortcode inputs
     * @return string shortcode content
     */
-    
-    
+
+    public function randWithout($from, $to, array $exceptions) {
+        sort($exceptions); // lets us use break; in the foreach reliably
+        $number = rand($from, $to - count($exceptions)); // or mt_rand()
+        foreach ($exceptions as $exception) {
+            if ($number >= $exception) {
+                $number++; // make up for the gap
+            } else /*if ($number < $exception)*/ {
+                break;
+            }
+        }
+        return $number;
+    }
+
+    function getRandomNum()
+    {
+        $randomnum = rand(0, $array_max);
+    }
     
    public function handleShortcode($atts) {
 
@@ -54,11 +70,6 @@ class SimpleYetPowerfulQuiz_QuizShortCode extends SimpleYetPowerfulQuiz_ShortCod
     ON categories.id = wordcategories.category_id
     WHERE categories.slug_name = '$quiz_category'";
 
-
-    // $wordtable = $simpleplug->prefixTableName('goiword');
-    // $cattable = $simpleplug->prefixTableName('goicategories');
-    // $catwordtable = $simpleplug->prefixTableName('goiwordcategories');
-
     $sqlv2 = "
     SELECT 
     $wordtable.japanese, 
@@ -87,22 +98,7 @@ $myrows = $wpdb->get_results( $sqlv2, ARRAY_A);
 $array_max = $wpdb->num_rows - 1; // so we dont check for non existent which is over last element (0 takes up first row)
 $amountofquestions = $wpdb->num_rows; // amount of questions
 $number = 0;
-function randWithout($from, $to, array $exceptions) {
-sort($exceptions); // lets us use break; in the foreach reliably
-$number = rand($from, $to - count($exceptions)); // or mt_rand()
-foreach ($exceptions as $exception) {
-    if ($number >= $exception) {
-        $number++; // make up for the gap
-    } else /*if ($number < $exception)*/ {
-        break;
-    }
-}
-return $number;
-}
-function getRandomNum()
-{
-$randomnum = rand(0, $array_max);
-}
+
 if($wpdb->num_rows > 0)
 {
 // Works perfectly. if you want you can shuffle all words..
@@ -133,24 +129,24 @@ foreach($myrows as $row)
     <div class=\"questiontext\">What is <span class=\"questionword\">" . $row['meaning'] . "</span> in Japanese?</div>
     <div class=\"clear\"></div></div>";
 
-    $q1 = randWithout(0, $array_max, array());
-    $q2 = randWithout(0, $array_max, array($q1));
-    $q3 = randWithout(0, $array_max, array($q1, $q2));
+    $q1 = $this->randWithout(0, $array_max, array());
+    $q2 = $this->randWithout(0, $array_max, array($q1));
+    $q3 = $this->randWithout(0, $array_max, array($q1, $q2));
     
     while($myrows[$q1]['japanese'] == $row['japanese'] || $myrows[$q1]['japanese'] == $myrows[$q2]['japanese'] || $myrows[$q1]['japanese'] == $myrows[$q3]['japanese'])
     {
         //echo "sql1 same.. gogogog";
-        $q1 = randWithout(0, $array_max, array());
+        $q1 = $this->randWithout(0, $array_max, array());
     }
     while($myrows[$q2]['japanese'] == $row['japanese'] || $myrows[$q2]['japanese'] == $myrows[$q3]['japanese'] || $myrows[$q2]['japanese'] == $myrows[$q1]['japanese'])
     {
         //echo "sq2 same.. gogogog";
-        $q2 = randWithout(0, $array_max, array($q1));
+        $q2 = $this->randWithout(0, $array_max, array($q1));
     }
     while($myrows[$q3]['japanese'] == $row['japanese'] || $myrows[$q3]['japanese'] == $myrows[$q1]['japanese'] || $myrows[$q3]['japanese'] == $myrows[$q2]['japanese'])
     {
         //echo "sq3 same.. gogogog";
-        $q3 = randWithout(0, $array_max, array($q2, $q3));
+        $q3 = $this->randWithout(0, $array_max, array($q2, $q3));
     }
     
     $answeroptionsa = array(

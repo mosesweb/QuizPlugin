@@ -3,20 +3,6 @@
 include_once('SimpleYetPowerfulQuiz_LifeCycle.php');
 
 global $wpdb;
-
-        // $sql = "
-        // SELECT 
-        // meaning 
-        
-        // FROM xbrs_simpleyetpowerfulquiz_plugin_goiword
-        
-        // ";
-        // $myrows = $wpdb->get_results( $sql, ARRAY_A);
-        // foreach($myrows as $row)
-        // {
-        //     echo $row['meaning'] . '<br />';
-        // }   
-
 ?>
 
 <div class="container">  
