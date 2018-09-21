@@ -75,14 +75,47 @@ class SimpleYetPowerfulQuiz_Plugin extends SimpleYetPowerfulQuiz_LifeCycle {
         PRIMARY KEY (`id`)
         )
         ");
+
+        $catgroup = $this->prefixTableName('goicatgroup');
+        
+        $wpdb->query("
+        CREATE TABLE IF NOT EXISTS `$catgroup` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `parent` int(11) DEFAULT '0',
+            `name` varchar(100) NOT NULL,
+            `slug_name` varchar(100) NOT NULL,
+            `user_id` int(11) DEFAULT NULL,
+            `category_image` varchar(300) NOT NULL,
+            `quiz_ready` tinyint(4) NOT NULL DEFAULT '0',
+            `quiz_desc` varchar(300) NOT NULL,
+            `difficulty` varchar(30) NOT NULL DEFAULT 'low',
+            `quiz_image` varchar(100) NOT NULL DEFAULT '',
+            `date_created` date NOT NULL,
+            `visable` tinyint(1) DEFAULT '1',
+            `featured` tinyint(1) DEFAULT '0',
+            `extra` text NOT NULL,
+            `extra_author` varchar(100) NOT NULL DEFAULT 'japanesegoi',
+            `kanji_quiz_support` tinyint(1) NOT NULL DEFAULT '0',
+            `show_images` tinyint(1) DEFAULT '1',
+            `quiz_extra` varchar(450) DEFAULT NULL,
+            `help_tools` tinyint(1) DEFAULT '0',
+            `random_order` tinyint(1) DEFAULT '0',
+            `quiz_image_show` tinyint(1) DEFAULT '1',
+            PRIMARY KEY (`id`)
+          )
+          ");
+
+
         $cattable = $this->prefixTableName('goicategories');
         
         $wpdb->query("
         CREATE TABLE IF NOT EXISTS `$cattable` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
+            `group_id` int(11) NULL,
             `parent` int(11) DEFAULT '0',
             `name` varchar(100) NOT NULL,
             `slug_name` varchar(100) NOT NULL,
+            `user_id` int(11) DEFAULT NULL,
             `category_image` varchar(300) NOT NULL,
             `quiz_ready` tinyint(4) NOT NULL DEFAULT '0',
             `quiz_desc` varchar(300) NOT NULL,
@@ -127,8 +160,13 @@ class SimpleYetPowerfulQuiz_Plugin extends SimpleYetPowerfulQuiz_LifeCycle {
           );");
 
           $wpdb->query("
-          INSERT INTO `$cattable` (`id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '0', 'My first category', 'my-first-category', '', '1', 'My first category', 'low', '', '2018-01-15', '1', '0', 'My first category', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
+          INSERT INTO `$catgroup` (`id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '0', 'My first group quiz', 'my-first-category', '', '1', 'My first category', 'low', '', '2018-01-15', '1', '0', 'My first category', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
           ");
+
+          $wpdb->query("
+          INSERT INTO `$cattable` (`id`, `group_id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '1', '0', 'My first category', 'my-first-category', '', '1', 'My first category', 'low', '', '2018-01-15', '1', '0', 'My first category', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
+          ");
+
           $wpdb->query("
           INSERT INTO `$wordtable` (`id`, `meaning`, `japanese`, `kanji`, `kana`, `romaji`, `visible`, `featured`, `image`, `image_author`, `imgauthor_link`, `extra`) VALUES
          (NULL, 'My first meaning', 'japanese1', 'kanji', 'kana', 'romaji', '1', '0', NULL, 'japanesegoi', NULL, NULL),
@@ -152,6 +190,8 @@ class SimpleYetPowerfulQuiz_Plugin extends SimpleYetPowerfulQuiz_LifeCycle {
         $wpdb->query("DROP TABLE IF EXISTS `$wordtable`");
         $cattable = $this->prefixTableName('goicategories');
         $wpdb->query("DROP TABLE IF EXISTS `$cattable`");
+        $catgroup = $this->prefixTableName('goicatgroup');
+        $wpdb->query("DROP TABLE IF EXISTS `$catgroup`");
 
         $wpdb->query("
         ALTER TABLE `$catwords`
@@ -220,8 +260,17 @@ class SimpleYetPowerfulQuiz_Plugin extends SimpleYetPowerfulQuiz_LifeCycle {
         // Register short codes
         // http://plugin.michael-simpson.com/?page_id=39
         include_once('SimpleYetPowerfulQuiz_QuizShortCode.php');
+        include_once('SimpleYetPowerfulQuiz_MyResultsShortCode.php');
+        include_once('SimpleYetPowerfulQuiz_QuizMapShortCode.php');
+
         $sc = new SimpleYetPowerfulQuiz_QuizShortCode();
-        $sc->register('show-quiz-app');        
+        $sc->register('show-quiz-app'); 
+        
+        $sc_my_results = new SimpleYetPowerfulQuiz_MyResultsShortCode();
+        $sc_my_results->register('my-quiz-results'); 
+
+        $sc_map = new SimpleYetPowerfulQuiz_QuizMapShortCode();
+        $sc_map->register('quiz-map'); 
 
         // Register AJAX hooks
         // http://plugin.michael-simpson.com/?page_id=41

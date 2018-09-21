@@ -49,15 +49,36 @@ class SimpleYetPowerfulQuiz_Edit extends SimpleYetPowerfulQuiz_Plugin {
         }  
   
     }
+    function editDataGroupCat($iid, $itext, $icol)
+    {
+        global $wpdb;
+        $plug = new SimpleYetPowerfulQuiz_Plugin();
+
+        $cattable = $plug->prefixTableName('goicatgroup');
+
+        $id = $iid;  
+        $text = $itext;  
+        $column_name = $icol;  
+
+        $sql = "UPDATE $cattable SET ".$column_name."='".$text."' WHERE id='".$id."'";  
+        if($wpdb->query($sql))  
+        {  
+            echo 'Data Updated';  
+        }
+  
+    }
 }
 $edit = new SimpleYetPowerfulQuiz_Edit();
 if($_POST['editype'] = 'vocablist')
 {
     $edit->editDataVocab($_POST["id"], $_POST["text"], $_POST["column_name"]);
-
 }
 if($_POST['editype'] = 'catlist')
 {
     $edit->editDataCat($_POST["id"], $_POST["text"], $_POST["column_name"]);
+}
+if($_POST['editype'] = 'groupcategorylist')
+{
+    $edit->editDataGroupCat($_POST["id"], $_POST["text"], $_POST["column_name"]);
 }
  ?>

@@ -69,6 +69,23 @@ class SimpleYetPowerfulQuiz_Insert extends SimpleYetPowerfulQuiz_Plugin {
                 echo 'Data Inserted';  
         }
     }
+    function insertGroupCatData($gcatname)
+    {
+        $plug = new SimpleYetPowerfulQuiz_Plugin();
+        global $wpdb;
+        
+        $wordtable = $plug->prefixTableName('goiword');
+        $cattable = $plug->prefixTableName('goicategories');
+        $catgroup = $plug->prefixTableName('goicatgroup');
+        $catwordtable = $plug->prefixTableName('goiwordcategories');
+        $timestamp = time();
+        $slugname = $this->aslugify( $gcatname . '_' .  $timestamp );
+        $sql = "INSERT INTO $catgroup(name, slug_name) VALUES('".$gcatname."', '".$slugname."')";  
+        if($wpdb->query($sql))  
+        {  
+            echo 'Data Inserted';  
+        }
+    }
 }
 $insert = new SimpleYetPowerfulQuiz_Insert();
 if($_POST["addtype"] == 'addvocab')
@@ -79,5 +96,9 @@ if($_POST["addtype"] == 'addvocab')
 if($_POST["addtype"] == 'addcat')
 {
     $insert->insertCatData( $_POST["catname"]);
+}
+if($_POST["addtype"] == 'addgroupcat')
+{
+    $insert->insertGroupCatData( $_POST["groupcatname"]);
 }
  ?>

@@ -7,24 +7,13 @@ class SimpleYetPowerfulQuiz_Select extends SimpleYetPowerfulQuiz_Plugin {
     
     function getData()
     {
-        /*
-          		
-        SELECT word.japanese, word.meaning, word.kanji, word.romaji, word.japanese, word.image, word.image_author, word.imgauthor_link, word.id as WID, 
-		categories.name, categories.slug_name 
-		FROM word
-		INNER JOIN wordcategories 
-		ON word.id = wordcategories.word_id
-		INNER JOIN categories
-		ON categories.id = wordcategories.category_id
-        WHERE categories.slug_name = '$category_variable'";
-        
-         */
         $simpleplug = new SimpleYetPowerfulQuiz_Plugin();
         global $wpdb;
          $output = '';
          $wordtable = $simpleplug->prefixTableName('goiword');
          $cattable = $simpleplug->prefixTableName('goicategories');
          $catwordtable = $simpleplug->prefixTableName('goiwordcategories');
+         $catgroup = $simpleplug->prefixTableName('goicatgroup');
 
          $sqladvanced = "
          SELECT 
@@ -61,9 +50,9 @@ class SimpleYetPowerfulQuiz_Select extends SimpleYetPowerfulQuiz_Plugin {
     
          foreach($result as $row)  
         {
-        $itemName = $row["categoryname"];
-        if (!array_key_exists($itemName, $data)) {
-            $data[$itemName] = array();
+            $itemName = $row["categoryname"];
+            if (!array_key_exists($itemName, $data)) {
+                $data[$itemName] = array();
         }
         $data[$itemName][] = $row;
         }
@@ -113,7 +102,6 @@ class SimpleYetPowerfulQuiz_Select extends SimpleYetPowerfulQuiz_Plugin {
                     </tr>  
                       '; 
 
-                      
             foreach ($rows as $row) {
 
                 $output .= '
@@ -159,6 +147,60 @@ class SimpleYetPowerfulQuiz_Select extends SimpleYetPowerfulQuiz_Plugin {
               <div class="table-responsive" data-list="catlist">  
                    <table class="table table-bordered">  
                         <tr>  
+                             <th width="5%">Id</th> 
+                             <th width="5%">Quiz group id</th>
+                             <th width="10%">Slug name</th> 
+                             <th width="30%">Name</th>  
+                             <th width="40%">Image</th>  
+                             <th width="10%">Delete</th>  
+                        </tr>';  
+         if($wpdb->num_rows > 0)  
+         {  
+            foreach($result as $row)
+            
+              {  
+                   $output .= '  
+                        <tr>  
+                            <td>'.$row["id"].'</td> 
+                            <td>'.$row["group_id"].'</td> 
+                            <td>'.$row["slug_name"].'</td>   
+                            <td class="name" data-id1="'.$row["id"].'" contenteditable>'.$row["name"].'</td>  
+                            <td class="Image" data-id2="'.$row["id"].'" contenteditable>'.$row["Image"].'</td>  
+                            <td><button type="button" name="delete_btn" data-id3="'.$row["id"].'" class="btn btn-xs btn-danger btn_delete">x</button></td>  
+                        </tr>  
+                   ';  
+              }  
+              $output .= '  
+                   <tr>  
+                        <td></td>     
+                        <td id="group_id" contenteditable></td>    
+                        <td></td>  
+                        <td id="catname" contenteditable></td>  
+                        <td id="Image" contenteditable></td>  
+                        <td><button type="button" name="cat_btn_add" id="cat_btn_add" class="btn btn-xs btn-success">+</button></td>  
+                   </tr>  
+              ';  
+         }  
+         else  
+         {  
+              $output .= '<tr>  
+                                  <td colspan="4">Data not Found</td>  
+                             </tr>';  
+         }  
+         $output .= '</table>  
+              </div>';  
+         echo $output;
+
+    break;
+
+    case 'groupcategorylist':
+         $sql = "SELECT * FROM `$catgroup` ORDER BY id DESC";  
+         $result = $wpdb->get_results( $sql, ARRAY_A);
+
+         $output .= '  
+              <div class="table-responsive" data-list="groupcategorylist">  
+                   <table class="table table-bordered">  
+                        <tr>  
                              <th width="10%">Id</th> 
                              <th width="10%">Slug name</th> 
                              <th width="30%">Name</th>  
@@ -184,9 +226,9 @@ class SimpleYetPowerfulQuiz_Select extends SimpleYetPowerfulQuiz_Plugin {
                    <tr>  
                         <td></td>  
                         <td></td>  
-                        <td id="catname" contenteditable></td>  
+                        <td id="groupcatname" contenteditable></td>  
                         <td id="Image" contenteditable></td>  
-                        <td><button type="button" name="cat_btn_add" id="cat_btn_add" class="btn btn-xs btn-success">+</button></td>  
+                        <td><button type="button" name="group_cat_btn_add" id="group_cat_btn_add" class="btn btn-xs btn-success">+</button></td>  
                    </tr>  
               ';  
          }  

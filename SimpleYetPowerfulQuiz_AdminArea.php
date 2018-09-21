@@ -15,9 +15,12 @@ global $wpdb;
 
                 </div>
                 <div class="table-responsive">  
+                     <h3 align="center">Quiz group</h3><br />  
+                     <div id="live_dataGroupCategories"></div>   
+                </div>
+                <div class="table-responsive">  
                      <h3 align="center">Categories</h3><br />  
-                     <div id="live_dataCategories"></div>                 
-
+                     <div id="live_dataCategories"></div>   
                 </div>
 
            </div>  
@@ -34,6 +37,16 @@ function fetch_data()
                 success:function(data){  
                      $('#live_data').html(data); 
                      console.log("VOCAB!");
+                }  
+           });  
+           // group cat
+           $.ajax({  
+                url:"/wp-content/plugins/simple-yet-powerful-quiz/ajax/select.php",  
+                method:"POST", 
+                data:{datatype:'groupcategorylist'}, 
+                success:function(data){  
+                     $('#live_dataGroupCategories').html(data); 
+                     console.log("GCATS!");
                 }  
            });  
            // category
@@ -72,6 +85,26 @@ function fetch_data()
                 url:"/wp-content/plugins/simple-yet-powerful-quiz/ajax/insert.php",  
                 method:"POST",  
                 data:{addtype:'addvocab',meaning:meaning, japanese:japanese, categoryfromlistid: categoryselectedid, kanji: kanji, kana: kana, romaji: romaji},  
+                dataType:"text",  
+                success:function(data)  
+                {  
+                     alert(data);  
+                     fetch_data();  
+                }  
+           })  
+      });
+      // Group Cat add
+      $(document).on('click', '#group_cat_btn_add', function(){  
+           var catname = $('#groupcatname').text();  
+           if(catname == '')  
+           {  
+                alert("Enter Name");  
+                return false;  
+           }  
+           $.ajax({  
+                url:"/wp-content/plugins/simple-yet-powerful-quiz/ajax/insert.php",  
+                method:"POST",  
+                data:{addtype:'addgroupcat', groupcatname:catname},  
                 dataType:"text",  
                 success:function(data)  
                 {  

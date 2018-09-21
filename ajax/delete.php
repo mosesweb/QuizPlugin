@@ -28,15 +28,30 @@ class SimpleYetPowerfulQuiz_Delete extends SimpleYetPowerfulQuiz_Plugin {
             echo 'Cat Data Deleted';  
         }  
     }
+    function DeleteGroupCatData($iid)
+    {
+        $plug = new SimpleYetPowerfulQuiz_Plugin();
+        global $wpdb;
+        $groupcattable = $plug->prefixTableName('goicatgroup');
+        
+        $sql = "DELETE FROM $groupcattable WHERE id = '".$iid."'";  
+        if($wpdb->query($sql))  
+        {  
+            echo 'GroupCat Data Deleted';  
+        }  
+    }
 }
 
 $del = new SimpleYetPowerfulQuiz_Delete();
-if($_POST['deltype'] = 'catlist')
+if($_POST['deltype'] == 'catlist')
 {
     $del->DeleteCatData($_POST["id"]);
-
 }
-if($_POST['deltype'] = 'vocablist')
+if($_POST['deltype'] == 'groupcategorylist')
+{
+    $del->DeleteGroupCatData($_POST["id"]);
+}
+if($_POST['deltype'] == 'vocablist')
 {
     $del->DeleteWordData($_POST["id"]);
 }
