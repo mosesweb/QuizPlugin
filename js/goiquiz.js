@@ -97,8 +97,9 @@
 
 			registerScore(corr, mist, totalnums, corrproc);
 			// Show score if finished
-			if( $('span.total-q').first().text() == ele.length)
-			{
+			// todo logic if level or map is finished.
+			$('.main_questionsarea').hide();
+			
 				//alert("ye last");
 				var goodorbad = "Not the greatest score of all time but you did try.";
 				if(corrproc > 40)
@@ -135,7 +136,7 @@
 
 				$('.result').fadeIn(600);
 				
-			} 
+			
 			console.log($('span.total-q').text());
 		}
 		function registerScore(corr, mist, totalq, proctotal)
@@ -157,7 +158,7 @@
 		var totalq = $('span.total-q').first().text();
 		var tcatname = $('.vocabname').text();
 		var cq = $('.current-q').text();
-		 function runAjax(squestion, sanswer, thenum)
+		 function runAjax(squestion, sanswer, thenum, current_level)
 		 {
 			  $.ajax({
 			  url: '/wp-content/plugins/simple-yet-powerful-quiz/ajax/checkanswerv2.php',
@@ -167,7 +168,8 @@
 				whatquest: squestion, 
 				answer: sanswer, 
 				mode: 'meaning', 
-				qnumber: thenum
+				qnumber: thenum,
+				current_level: current_level
 			},
 			  success: function(data, status) {
 				//console.log( "Sample of data:" + data + correct);
@@ -198,7 +200,7 @@
 				{
 					$('.result-info-word-info').html('<b>' + obj.romaji + '</b>');
 				}
-				if(thenum == totalq)
+				if(obj.is_last_question)
 				{
 					LastReached(correct, wronganswers);
 				}
@@ -228,8 +230,14 @@
 				checkClass();
 				var q = $(this).closest(".answer-options.box-" + num).children(".question").find('.questionword').text();
 				var a = $(this).text();
+
+				var current_level = $(this).closest(".answer-options.box-" + num).children(".question").find('.current_level').text();
+				
+				if(current_level)
+				console.log(current_level);
+
 				//alert(q + a);
-				runAjax(q, a, num);
+				runAjax(q, a, num, current_level);
 				
 				// done. hide this
 				$(".answer-options.box-" + num).hide();

@@ -141,15 +141,16 @@ foreach($myrows as $key=>$row)
     shuffle($numbers);
     $current_level = array_search($qid, $unique_levels_values);
     $current_level_display = array_search($qid, $unique_levels) + 1; // plus one to as level one
-
+   
     echo "<div class=\"answer-options box-$number\">";
     echo "<div class=\"question\">";
     
     if(($row['qid'] != $myrows[$key-1]['qid']) && !(count($unique_levels) < 1 ) && $key != 0)
-    echo "NEW LEVEL!";
-
+    {
+        echo "<div class=\"newlevel\">new level</div>";
+    }
     echo"
-    <div class=\"questionnumber\"><div class='quizcatid'>".$qid."'</div><b>" . $row['qname']. "</b> Question <span class=\"current-q\">$number</span> / <span class=\"total-q\">$amountofquestions</span>. <span class='current_level'>$current_level_display of $numberoflevels</span></div>
+    <div class=\"questionnumber\"><div class='quizcatid'>".$qid."'</div><b>" . $row['qname']. "</b> Question <span class=\"current-q\">$number</span> / <span class=\"total-q\">$amountofquestions</span>. <span class='current_level'>$current_level_display</span> of $numberoflevels</div>
     <div class=\"questiontext\">What is <span class=\"questionword\">" . $row['meaning'] . "</span> in Japanese?</div>
     <div class=\"clear\"></div></div>";
 

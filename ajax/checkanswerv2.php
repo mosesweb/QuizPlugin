@@ -15,6 +15,8 @@ class SimpleYetPowerfulQuiz_CheckAnswer extends SimpleYetPowerfulQuiz_Plugin {
 	$catwordtable = $simpleplug->prefixTableName('goiwordcategories');
 	$resulttable = $simpleplug->prefixTableName('goiresults');
 	$categoryQuizId = 0;
+	$total_levels = 0;
+	$questions_in_level = [];
 
 	//" . $question . "' AND japanese = '" . $answer . "'";
 	if(isset($question) && isset($answer) && isset($category))
@@ -24,6 +26,7 @@ class SimpleYetPowerfulQuiz_CheckAnswer extends SimpleYetPowerfulQuiz_Plugin {
 		$question = $wpdb->_real_escape($question);
 		$answer = $wpdb->_real_escape($answer);
 		$category = $wpdb->_real_escape($category);
+		$wpdb->show_errors( true );
 
 		$countQuestionsSQL = "
 		SELECT COUNT(*) AS count, $cattable.id AS categoryquizid FROM $wordtable
@@ -34,6 +37,55 @@ class SimpleYetPowerfulQuiz_CheckAnswer extends SimpleYetPowerfulQuiz_Plugin {
 		$catgroup.slug_name = '". $category ."'";
 		$numberOfQResult = $wpdb->get_results( $countQuestionsSQL, ARRAY_A);
 		$numberofQuestions = 0;
+		
+		$levelsCountSQL = "
+		SELECT DISTINCT COUNT($cattable.id) AS levels_count
+		FROM $cattable
+		
+		INNER JOIN $catgroup ON $catgroup.id = $cattable.group_id
+		
+		WHERE 
+		$catgroup.slug_name = '". $category ."'";
+		$numberOfLevelsResult = $wpdb->get_results( $levelsCountSQL, ARRAY_A);
+		if($wpdb->num_rows > 0)
+		{
+			$total_levels = $numberOfLevelsResult[0]["levels_count"];
+		}
+
+		// TODO OPTIMISE EVERYTHING IN THIS FILE..
+		$countQuestionsSQL = "
+		SELECT COUNT(*) AS count, $cattable.id AS categoryquizid FROM $wordtable
+		INNER JOIN $catwordtable ON $wordtable.id = $catwordtable.word_id
+		INNER JOIN $cattable ON $cattable.id = $catwordtable.category_id
+		INNER JOIN $catgroup ON $catgroup.id = $cattable.group_id
+		WHERE 
+		$catgroup.slug_name = '". $category ."'";
+		$numberOfQResult = $wpdb->get_results( $countQuestionsSQL, ARRAY_A);
+		$numberofQuestions = 0;
+		
+		$LevelsInfoSQL = "
+		SELECT 
+		COUNT($wordtable.id) AS words_in_level, 
+		$cattable.name AS level_name, 
+		$catgroup.name AS map_name 
+		FROM $wordtable
+		INNER JOIN `$catwordtable` 
+		ON $wordtable.id = $catwordtable.word_id 
+		INNER JOIN $cattable 
+		ON $cattable.id = $catwordtable.category_id 
+		INNER JOIN $catgroup ON 
+		$cattable.group_id = $catgroup.id 
+		WHERE $catgroup.slug_name = '$category'
+		GROUP BY $cattable.name
+		";
+
+		$levelsInfoResult = $wpdb->get_results( $LevelsInfoSQL, ARRAY_A);
+		if($wpdb->num_rows > 0)
+		{
+			$questions_in_level = $levelsInfoResult;
+		}
+
+
 		foreach($numberOfQResult as $c)
 		{
 			$numberofQuestions = $c["count"];
@@ -106,8 +158,22 @@ class SimpleYetPowerfulQuiz_CheckAnswer extends SimpleYetPowerfulQuiz_Plugin {
 				$arr['meaning'] = $corrrow['meaning'];
 			}
 		}
-		$arr['extra_info'] = "hey.." . get_current_user_id() . $currentquestionnum . ' | ' . $numberofQuestions;
-
+		$arr['userid'] = get_current_user_id();
+		$current_level = 0;
+		if(isset($_POST['current_level']))
+		{
+			$current_level = $_POST['current_level'];
+			$arr['current_level'] = $_POST['current_level'];
+		
+		}	
+		$arr['levels_count'] = $total_levels;
+		
+		$arr['current_question'] =  $currentquestionnum;
+		$arr['questions_in_level'] =  $questions_in_level;
+		$arr['number_of_questions'] = $numberofQuestions;
+		$arr['is_last_question'] = $levelsInfoResult[$current_level]["words_in_level"] == ($currentquestionnum) ? true : false;
+		
+		
 		echo json_encode($arr);
 	}
 	else
@@ -138,11 +204,9 @@ public function LogResult($correctanswersgiven, $mistakeanswersgiven, $lcategory
 	}
 	$totalqs = 0;
 	//$score = ($correctanswersgiven/$lamountofq)*100;
-	$sqlloguserscore = "INSERT INTO `$resulttable` (`id`, `goicategory_id`, `procent_correctness`, `message`, `user_id`) VALUES (NULL, '$categoryid', '$proctotal', 'hej', '".get_current_user_id()."');";
+	$sqlloguserscore = "INSERT INTO `$resulttable` (`id`, `goicategory_id`, `procent_correctness`, `message`, `user_id`) VALUES (NULL, '$categoryid', '$proctotal', 'Correct: $correctanswersgiven', '".get_current_user_id()."');";
 	$wpdb->query($sqlloguserscore);
-	var_dump($wpdb);
 	echo $sqlloguserscore;
-	
 }
 
 }
@@ -157,7 +221,6 @@ if(isset($_POST['whatquest']))
 	$qnumber = $_POST['qnumber'];
 
 	$checkObj->CheckAnswer($question, $category, $answer, $whatmode, $qnumber);
-
 }
 if(isset($_POST['ca']))
 	$correctanswersgiven = $_POST['ca'];
