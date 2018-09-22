@@ -122,22 +122,34 @@ if($atts['order'] == "desc")
 {
     $myrows = array_reverse($myrows);
 }
-//shuffle($myrows);
+
 /* fetch associative array */
+
 $post = array(); 
 
-//while ($row = $rresult->fetch_assoc())
+$unique_levels_values = array_column($myrows, 'qid'); // use array_values to reset indexes
+$unique_levels = array_values(array_unique(array_column($myrows, 'qid'))); // use array_values to reset indexes
+//array_count_values(array_column($myrows, 'qid'));
+// count($unique_levels);
+
 echo '<div class="main_questionsarea">';
-foreach($myrows as $row)
+foreach($myrows as $key=>$row)
 {
+    $qid = $row['qid'];
     $number++;
     $numbers = range(0, $array_max);
     shuffle($numbers);
+    $current_level = array_search($qid, $unique_levels_values);
+    $current_level_display = array_search($qid, $unique_levels) + 1; // plus one to as level one
 
     echo "<div class=\"answer-options box-$number\">";
     echo "<div class=\"question\">";
+    
+    if(($row['qid'] != $myrows[$key-1]['qid']) && !(count($unique_levels) < 1 ) && $key != 0)
+    echo "NEW LEVEL!";
+
     echo"
-    <div class=\"questionnumber\"><b>" . $row['qname']. "</b> Question <span class=\"current-q\">$number</span> / <span class=\"total-q\">$amountofquestions</span>. Levels: $numberoflevels</div>
+    <div class=\"questionnumber\"><div class='quizcatid'>".$qid."'</div><b>" . $row['qname']. "</b> Question <span class=\"current-q\">$number</span> / <span class=\"total-q\">$amountofquestions</span>. <span class='current_level'>$current_level_display of $numberoflevels</span></div>
     <div class=\"questiontext\">What is <span class=\"questionword\">" . $row['meaning'] . "</span> in Japanese?</div>
     <div class=\"clear\"></div></div>";
 

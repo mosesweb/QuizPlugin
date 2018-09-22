@@ -58,11 +58,19 @@ class SimpleYetPowerfulQuiz_CheckAnswer extends SimpleYetPowerfulQuiz_Plugin {
 		
 		
 		// Array and then make json encode
-		$arr = array('result' => 'correct', 'correct_answer' => '', 'wrong_answer' => '', 'last_question' => '', 'guess' => $answer, 'japanese' => '', 'kana' => '', 'kanji' => '', 'romaji' => '', 'meaning' => '');
+		$arr = array('result' => 'correct', 
+		'correct_answer' => '', 
+		'wrong_answer' => '', 
+		'last_question' => '', 
+		'guess' => $answer, 'japanese' => '', 
+		'kana' => '', 
+		'kanji' => '', 
+		'romaji' => '', 
+		'meaning' => '');
+
 		$arr['last_question'] = 'What is ' . $question . ' in Japanese?';
 		$result = $wpdb->get_results( $sql, ARRAY_A);
 		$numrows = $wpdb->num_rows;
-		
 		
 		$arr['correct_answer'] = "";
 		$arr['japanese'] = "";

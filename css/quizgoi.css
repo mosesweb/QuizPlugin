@@ -129,4 +129,7 @@ img.repeat-afterquiz {
 	margin: 10px;
 	cursor:pointer;
 }
+.quizcatid{
+	display:none;
+}
 /* END QUIZ GOI */

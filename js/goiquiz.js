@@ -162,7 +162,13 @@
 			  $.ajax({
 			  url: '/wp-content/plugins/simple-yet-powerful-quiz/ajax/checkanswerv2.php',
 			  type: 'post',
-			  data: { whatcategory: tcatname, whatquest: squestion, answer: sanswer, mode: 'meaning', qnumber: thenum},
+			  data: { 
+				whatcategory: tcatname, 
+				whatquest: squestion, 
+				answer: sanswer, 
+				mode: 'meaning', 
+				qnumber: thenum
+			},
 			  success: function(data, status) {
 				//console.log( "Sample of data:" + data + correct);
 				var obj = jQuery.parseJSON(data);
