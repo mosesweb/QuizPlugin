@@ -161,11 +161,18 @@ class SimpleYetPowerfulQuiz_Plugin extends SimpleYetPowerfulQuiz_LifeCycle {
           );");
 
           $wpdb->query("
-          INSERT INTO `$catgroup` (`id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '0', 'My first group quiz', 'my-first-category', '', '1', 'My first category', 'low', '', '2018-01-15', '1', '0', 'My first category', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
+          INSERT INTO `$catgroup` (`id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '0', 'Quiz 1', 'quiz-1', '', '1', 'My first category', 'low', '', '2018-01-15', '1', '0', 'Quiz 1', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
           ");
 
           $wpdb->query("
-          INSERT INTO `$cattable` (`id`, `group_id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '1', '0', 'My first category', 'my-first-category', '', '1', 'My first category', 'low', '', '2018-01-15', '1', '0', 'My first category', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
+          INSERT INTO `$catgroup` (`id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '0', 'Quiz 2', 'quiz-2', '', '1', 'My first category', 'low', '', '2018-01-15', '1', '0', 'Quiz 2', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
+          ");
+
+          $wpdb->query("
+          INSERT INTO `$cattable` (`id`, `group_id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '1', '0', 'Level 1', 'level-1', '', '1', 'My first level', 'low', '', '2018-01-15', '1', '0', 'My first category', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
+          ");
+          $wpdb->query("
+          INSERT INTO `$cattable` (`id`, `group_id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '2', '0', 'Level 1', 'level-1', '', '1', 'My first level', 'low', '', '2018-01-15', '1', '0', 'My first category', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
           ");
 
           $wpdb->query("
@@ -175,13 +182,28 @@ class SimpleYetPowerfulQuiz_Plugin extends SimpleYetPowerfulQuiz_LifeCycle {
          (NULL, 'My third meaning', 'japanese3', 'kanji', 'kana', 'romaji', '1', '0', NULL, 'japanesegoi', NULL, NULL),
          (NULL, 'My fourth meaning', 'japanese4', 'kanji', 'kana', 'romaji', '1', '0', NULL, 'japanesegoi', NULL, NULL)
          ;");
-        
+
+         $wpdb->query("
+         INSERT INTO `$wordtable` (`id`, `meaning`, `japanese`, `kanji`, `kana`, `romaji`, `visible`, `featured`, `image`, `image_author`, `imgauthor_link`, `extra`) VALUES
+        (NULL, 'hello', 'konnichiha', 'konnichiha', 'konnichiha', 'konnichiha', '1', '0', NULL, 'japanesegoi', NULL, NULL),
+        (NULL, 'how are you?', 'genki?', 'genki?', 'genki?', 'genki?', '1', '0', NULL, 'japanesegoi', NULL, NULL),
+        (NULL, 'testing', 'tesuto', 'tesuto', 'tesuto', 'tesuto', '1', '0', NULL, 'japanesegoi', NULL, NULL),
+        (NULL, 'what', 'nani', 'nani', 'nani', 'nani', '1', '0', NULL, 'japanesegoi', NULL, NULL)
+        ;");
+       
           $wpdb->query("
           INSERT INTO `$catwords` (`id`, `word_id`, `category_id`) VALUES 
           (NULL, '1', '1'),
           (NULL, '2', '1'),
           (NULL, '3', '1'),
           (NULL, '4', '1');");
+
+          $wpdb->query("
+          INSERT INTO `$catwords` (`id`, `word_id`, `category_id`) VALUES 
+          (NULL, '5', '2'),
+          (NULL, '6', '2'),
+          (NULL, '7', '2'),
+          (NULL, '8', '2');");
 
     }
     public function deactivate()
