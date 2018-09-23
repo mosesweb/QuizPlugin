@@ -60,7 +60,6 @@ class SimpleYetPowerfulQuiz_QuizMapShortCode extends SimpleYetPowerfulQuiz_Short
     $cattable.name AS qname, 
     $catgrouptable.slug_name,
     $cattable.id AS qid
-
     FROM $wordtable
     
     INNER JOIN $catwordtable 
@@ -129,10 +128,14 @@ $post = array();
 
 $unique_levels_values = array_column($myrows, 'qid'); // use array_values to reset indexes
 $unique_levels = array_values(array_unique(array_column($myrows, 'qid'))); // use array_values to reset indexes
-//array_count_values(array_column($myrows, 'qid'));
+$levels_questions_count = array_count_values(array_column($myrows, 'qid'));
+
+//var_dump((array_column($myrows, 'WID')));
 // count($unique_levels);
 
 echo '<div class="main_questionsarea">';
+
+
 foreach($myrows as $key=>$row)
 {
     $qid = $row['qid'];
@@ -141,7 +144,17 @@ foreach($myrows as $key=>$row)
     shuffle($numbers);
     $current_level = array_search($qid, $unique_levels_values);
     $current_level_display = array_search($qid, $unique_levels) + 1; // plus one to as level one
-   
+    $amountolevelquestions = $levels_questions_count[$qid];
+    $items = array(1, 4, 5, 8, 0, 6);
+
+    $questions_of_level = 
+    array_filter($myrows, function($el) use ($qid)
+    {
+        return $el["qid"] == $qid;
+    });
+    $rr = array_column($questions_of_level, 'WID');
+    $question_level_number = array_search($row['WID'], array_values(array_unique(array_column($questions_of_level, 'WID'))));
+    $question_level_number += 1; // for display purpose
     echo "<div class=\"answer-options box-$number\">";
     echo "<div class=\"question\">";
     
@@ -150,7 +163,7 @@ foreach($myrows as $key=>$row)
         echo "<div class=\"newlevel\">new level</div>";
     }
     echo"
-    <div class=\"questionnumber\"><div class='quizcatid'>".$qid."'</div><b>" . $row['qname']. "</b> Question <span class=\"current-q\">$number</span> / <span class=\"total-q\">$amountofquestions</span>. <span class='current_level'>$current_level_display</span> of $numberoflevels</div>
+    <div class=\"questionnumber\"><div class='quizcatid'>".$qid."'</div><b>" . $row['qname']. "</b> Question <span class=\"current-q\">$question_level_number</span> / <span class=\"levels-q\"><b>$amountolevelquestions</b></span>| Total questions: <span class=\"total-q\">$amountofquestions</span>. <span class='current_level'>$current_level_display</span> of $numberoflevels</div>
     <div class=\"questiontext\">What is <span class=\"questionword\">" . $row['meaning'] . "</span> in Japanese?</div>
     <div class=\"clear\"></div></div>";
 

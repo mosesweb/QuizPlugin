@@ -109,8 +109,8 @@ if($rresult->num_rows > 0)
 <div class="result" style="display:none">
 <h1>Completion</h1>
 	<div class="result-left">
-		<div class="result-header">You got 4 correct answers out of 22</div>
-		<div class="result-text">Correct procentage: 18%</div>
+		<div class="result-header">You got x correct answers out of x</div>
+		<div class="result-text">Correct procentage: x%</div>
 	</div>
 	<div class="result-right">
 		<div class="innerright">

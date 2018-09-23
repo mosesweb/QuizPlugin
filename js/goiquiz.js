@@ -4,7 +4,9 @@
 			
 		var num = 1;
 		var correct = 0;
+		var totalcorrect = 0;
 		var wronganswers = 0;
+		var totalwronganswers = 0;
 		var corrArr = [];
 		var mistakesArr = [];
 
@@ -82,16 +84,11 @@
 			mistakesArr = [];
 		}
 
-		function LastReached(corr, mist)
+		function LastReached(corr, mist, ending_question_num)
 		{
-			/*var currnum = $('.answer-options:visible').find('span.current-q').text();
-			var lastnum = $('.answer-options:visible').find('span.total-q').text();
-			if( currnum == lastnum )
-			{
-				alert("LAST ONE HAS BEEN REACHED");
-			}
-			*/
-			var totalnums = $('span.total-q').first().text();
+			var focus_el = $(".answer-options.box-" + ending_question_num).children(".question");
+
+			var totalnums = focus_el.find('span.levels-q').first().text();
 			var corrproc = Math.floor((corr/totalnums) * 100);
 			var ele = $('.answered');
 
@@ -131,10 +128,70 @@
 					goodorbad = "EXCELLENT.";
 				}
 				$('.result-header').text("You got " + corr + " correct answers out of "+ totalnums + ". " + goodorbad);
+				$('.result-header').append("<span class='next-level'>next level</span>");
 				$('.result-text').text("Correct procentage: " + corrproc + "%");
 				$("a.sociallink").attr("href", "http://twitter.com/share?related=japanesegoi&via=japanesegoi&lang=[en]&text=I got " + corrproc+ "%25 score in Japanese Vocabulary Quiz: <?php echo $current_catname ?>.&url=http://japanesegoi.com/vocabulary-quiz/<?php echo $whatcategory . "/" . $mode; ?>");
 
 				$('.result').fadeIn(600);
+				$('.next-level').click(function()
+				{
+					$('.result').hide();
+					$('.main_questionsarea').show();
+				});
+				
+			
+			console.log($('span.total-q').text());
+
+		}
+		function MapComplete(corr, mist)
+		{
+			var totalnums = $('span.total-q').first().text();
+			var corrproc = Math.floor((corr/totalnums) * 100);
+			var ele = $('.answered');
+
+			// special register?
+			registerScore(corr, mist, totalnums, corrproc);
+			alert("you did it! map complete.")
+			$('.main_questionsarea').hide();
+				var goodorbad = "Not the greatest score of all time but you did try.";
+				if(corrproc > 40)
+				{
+					goodorbad = "A little bit more practice wouldn't hurt! Nonetheless good efforts.";
+				}
+				if(corrproc > 50)
+				{
+					goodorbad = "You're on the right track. Being over the 50% is not bad.";
+				}
+				if(corrproc > 60)
+				{
+					goodorbad = "You pass! You are over 60% which is good!";
+				}
+				if(corrproc > 70)
+				{
+					goodorbad = "You are good at this. ";
+				}
+				if(corrproc > 80)
+				{
+					goodorbad = "Almost perfection reached. Just a little bit more and you'll get over 90%.";
+				}
+				if(corrproc > 90)
+				{
+					goodorbad = "Wonderful efforts. Really great job.";
+				}
+				if(corrproc == 100)
+				{
+					goodorbad = "EXCELLENT.";
+				}
+				$('.result-header').text("You got " + corr + " correct answers out of "+ totalnums + ". " + goodorbad);
+				$('.result-text').text("Correct procentage: " + corrproc + "%");
+				$("a.sociallink").attr("href", "http://twitter.com/share?related=japanesegoi&via=japanesegoi&lang=[en]&text=I got " + corrproc+ "%25 score in Japanese Vocabulary Quiz: <?php echo $current_catname ?>.&url=http://japanesegoi.com/vocabulary-quiz/<?php echo $whatcategory . "/" . $mode; ?>");
+
+				$('.result').fadeIn(600);
+				$('.next-level').click(function()
+				{
+					$('.result').hide();
+					$('.main_questionsarea').show();
+				});
 				
 			
 			console.log($('span.total-q').text());
@@ -158,7 +215,7 @@
 		var totalq = $('span.total-q').first().text();
 		var tcatname = $('.vocabname').text();
 		var cq = $('.current-q').text();
-		 function runAjax(squestion, sanswer, thenum, current_level)
+		 function runAjax(squestion, sanswer, levelnum, thenum, current_level)
 		 {
 			  $.ajax({
 			  url: '/wp-content/plugins/simple-yet-powerful-quiz/ajax/checkanswerv2.php',
@@ -168,7 +225,7 @@
 				whatquest: squestion, 
 				answer: sanswer, 
 				mode: 'meaning', 
-				qnumber: thenum,
+				qnumber: levelnum,
 				current_level: current_level
 			},
 			  success: function(data, status) {
@@ -179,6 +236,7 @@
 				if(obj.result == 'correct')
 				{
 					correct++;
+					totalcorrect++;
 					$(".correct").text(correct);
 					$('.result-info-text').html(squestion + ': <span class="correctindicate">' + obj.guess + '</span> was <span class="correctindicate">correct</span>!');
 					corrArr.push(obj.guess);
@@ -187,6 +245,7 @@
 				if(obj.result == 'wrong')
 				{
 					wronganswers++;
+					totalwronganswers++;
 					$('.wrong').text(wronganswers);
 					$('.result-info-text').html(squestion + ': ' + '<span class="wrongindicate">' + obj.guess + '</span> was <span class="wrongindicate">wrong</span>. Correct answer is:  <span class="correctindicate">' + obj.japanese + '</span>.');
 					mistakesArr.push(obj.guess);
@@ -202,7 +261,13 @@
 				}
 				if(obj.is_last_question)
 				{
-					LastReached(correct, wronganswers);
+					LastReached(correct, wronganswers, thenum);
+					correct = 0;
+					wronganswers = 0;
+				}
+				if(thenum == totalq)
+				{
+					MapComplete(totalcorrect, totalwronganswers)
 				}
 			  },
 			  error: function(xhr, desc, err) {
@@ -237,7 +302,11 @@
 				console.log(current_level);
 
 				//alert(q + a);
-				runAjax(q, a, num, current_level);
+				var level_question_num = 0;
+				level_question_num = $(this).closest(".answer-options.box-" + num).children(".question").find('.current-q').text();
+
+
+				runAjax(q, a, level_question_num, num, current_level);
 				
 				// done. hide this
 				$(".answer-options.box-" + num).hide();

@@ -171,6 +171,7 @@ class SimpleYetPowerfulQuiz_CheckAnswer extends SimpleYetPowerfulQuiz_Plugin {
 		$arr['current_question'] =  $currentquestionnum;
 		$arr['questions_in_level'] =  $questions_in_level;
 		$arr['number_of_questions'] = $numberofQuestions;
+		$arr['number_of_questions_in_level'] = $levelsInfoResult[$current_level]["words_in_level"];
 		$arr['is_last_question'] = $levelsInfoResult[$current_level]["words_in_level"] == ($currentquestionnum) ? true : false;
 		
 		
