@@ -248,6 +248,31 @@ class SimpleYetPowerfulQuiz_Plugin extends SimpleYetPowerfulQuiz_LifeCycle {
 
         // Add Actions & Filters
         // http://plugin.michael-simpson.com/?page_id=37
+        // add_filter('query_vars', 'parameter_queryvars' );
+        // function parameter_queryvars( $qvars )
+        // {
+        //     $qvars[] = 'quiz';
+        //     return $qvars;
+        // }
+        
+        add_action( 'init', 'wpse26388_rewrites_init' );
+        function wpse26388_rewrites_init(){
+            add_rewrite_rule(
+                'quiz/([^&]+)/?$',
+                'index.php?pagename=quiz&quiz_category=$matches[1]',
+                'top' );
+        }
+
+        add_filter( 'query_vars', 'wpse26388_query_vars' );
+        function wpse26388_query_vars( $query_vars ){
+            $query_vars[] = 'quiz_category';
+            return $query_vars;
+        }
+        function custom_rewrite_basic() 
+        {
+            add_rewrite_rule('^quiz/([0-9]+)/?', '?quiz=$1', 'top');
+        }
+        add_action('init', 'custom_rewrite_basic');
 
 
         // Adding scripts & styles to all pages

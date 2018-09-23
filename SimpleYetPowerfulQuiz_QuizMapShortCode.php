@@ -29,7 +29,7 @@ class SimpleYetPowerfulQuiz_QuizMapShortCode extends SimpleYetPowerfulQuiz_Short
 
     global $wpdb;
     $atts = shortcode_atts( array(
-        'quiz_category' => 'none',
+        'quiz_category' => get_query_var( 'quiz_category'),
         'order' => 'asc',
 		'baz' => 'default baz'
     ), $atts, 'bartag' );   
