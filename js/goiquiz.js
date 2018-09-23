@@ -64,10 +64,11 @@
 			var focus_el = $(".answer-options.box-" + ending_question_num).children(".question");
 
 			var totalnums = focus_el.find('span.levels-q').first().text();
+			var levelid = focus_el.find('#level-id').first().text();
 			var corrproc = Math.floor((corr/totalnums) * 100);
 			var ele = $('.answered');
 
-			registerScore(corr, mist, totalnums, corrproc);
+			registerScore(corr, mist, totalnums, corrproc, levelid);
 			// Show score if finished
 			// todo logic if level or map is finished.
 			$('.main_questionsarea').hide();
@@ -118,14 +119,17 @@
 			console.log($('span.total-q').text());
 
 		}
-		function MapComplete(corr, mist)
+		function MapComplete(corr, mist, ending_question_num)
 		{
-			var totalnums = $('span.total-q').first().text();
+			var focus_el = $(".answer-options.box-" + ending_question_num).children(".question");
+
+			var totalnums =$('span.total-q').first().text(); //focus_el.find('span.levels-q').first().text();
+			var levelid = focus_el.find('#level-id').first().text();
 			var corrproc = Math.floor((corr/totalnums) * 100);
 			var ele = $('.answered');
 
 			// special register?
-			registerScore(corr, mist, totalnums, corrproc);
+			registerScore(corr, mist, totalnums, corrproc, levelid);
 			alert("you did it! map complete.")
 			$('.main_questionsarea').hide();
 				var goodorbad = "Not the greatest score of all time but you did try.";
@@ -171,9 +175,8 @@
 			
 			console.log($('span.total-q').text());
 		}
-		function registerScore(corr, mist, totalq, proctotal)
+		function registerScore(corr, mist, totalq, proctotal, levelid)
 		{
-			var levelid = $('#level-id').text();
 			var lamountofq = totalq;
 			var theproctotal = proctotal;
 
@@ -234,7 +237,7 @@
 				{
 					$('.result-info-word-info').html('<b>' + obj.romaji + '</b>');
 				}
-				if(obj.is_last_question)
+				if(obj.is_last_question && thenum != totalq)
 				{
 					LastReached(correct, wronganswers, thenum);
 					correct = 0;
@@ -242,7 +245,7 @@
 				}
 				if(thenum == totalq)
 				{
-					MapComplete(totalcorrect, totalwronganswers)
+					MapComplete(totalcorrect, totalwronganswers, thenum)
 					totalcorrect = 0;
 					totalwronganswers = 0;
 				}
