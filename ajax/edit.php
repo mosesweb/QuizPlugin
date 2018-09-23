@@ -69,7 +69,6 @@ class SimpleYetPowerfulQuiz_Edit extends SimpleYetPowerfulQuiz_Plugin {
     }
 }
 $edit = new SimpleYetPowerfulQuiz_Edit();
-$what = $_POST['editype'];
 if($_POST['editype'] == 'vocablist')
 {
     $edit->editDataVocab($_POST["id"], $_POST["text"], $_POST["column_name"]);

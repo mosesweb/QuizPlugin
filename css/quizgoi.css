@@ -132,4 +132,8 @@ img.repeat-afterquiz {
 .quizcatid{
 	display:none;
 }
+#level-id
+{
+	display:none;
+}
 /* END QUIZ GOI */

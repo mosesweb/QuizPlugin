@@ -198,14 +198,14 @@
 		}
 		function registerScore(corr, mist, totalq, proctotal)
 		{
-			var tcatname = $('.vocabname').text();
+			var levelid = $('#level-id').text();
 			var lamountofq = totalq;
 			var theproctotal = proctotal;
 
 			  $.ajax({
 			  url: '/wp-content/plugins/simple-yet-powerful-quiz/ajax/checkanswerv2.php',
 			  type: 'post',
-			  data: { ca: corr, ma: mist, lcategory: tcatname, lamountofq: lamountofq, proctotal: theproctotal },
+			  data: { ca: corr, ma: mist, lcategory: levelid, lamountofq: lamountofq, proctotal: theproctotal },
 			  success: function(data) {
 				console.log(data);
 			  }
@@ -268,6 +268,8 @@
 				if(thenum == totalq)
 				{
 					MapComplete(totalcorrect, totalwronganswers)
+					totalcorrect = 0;
+					totalwronganswers = 0;
 				}
 			  },
 			  error: function(xhr, desc, err) {

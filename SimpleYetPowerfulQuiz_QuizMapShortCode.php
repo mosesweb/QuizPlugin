@@ -158,40 +158,26 @@ foreach($myrows as $key=>$row)
     echo "<div class=\"answer-options box-$number\">";
     echo "<div class=\"question\">";
     
-    if(($row['qid'] != $myrows[$key-1]['qid']) && !(count($unique_levels) < 1 ) && $key != 0)
+    if((isset($myrows[$key-1]['qid']) && $row['qid'] != $myrows[$key-1]['qid']) && !(count($unique_levels) < 1 ) && $key != 0)
     {
         echo "<div class=\"newlevel\">new level</div>";
     }
     echo"
-    <div class=\"questionnumber\"><div class='quizcatid'>".$qid."'</div><b>" . $row['qname']. "</b> Question <span class=\"current-q\">$question_level_number</span> / <span class=\"levels-q\"><b>$amountolevelquestions</b></span> | Total questions: <span class=\"total-q\">$amountofquestions</span>. Current level: <span class='current_level'>$current_level_display</span> / $numberoflevels</div>
+    <div id=\"level-id\">$qid</div><div class=\"questionnumber\"><div class='quizcatid'>".$qid."'</div><b>" . $row['qname']. "</b> Question <span class=\"current-q\">$question_level_number</span> / <span class=\"levels-q\"><b>$amountolevelquestions</b></span> | Total questions: <span class=\"total-q\">$amountofquestions</span>. Current level: <span class='current_level'>$current_level_display</span> / $numberoflevels</div>
     <div class=\"questiontext\">What is <span class=\"questionword\">" . $row['meaning'] . "</span> in Japanese?</div>
     <div class=\"clear\"></div></div>";
 
-    $q1 = $this->randWithout(0, $array_max, array());
-    $q2 = $this->randWithout(0, $array_max, array($q1));
-    $q3 = $this->randWithout(0, $array_max, array($q1, $q2));
-    
-    while($myrows[$q1]['japanese'] == $row['japanese'] || $myrows[$q1]['japanese'] == $myrows[$q2]['japanese'] || $myrows[$q1]['japanese'] == $myrows[$q3]['japanese'])
-    {
-        //echo "sql1 same.. gogogog";
-        $q1 = $this->randWithout(0, $array_max, array());
-    }
-    while($myrows[$q2]['japanese'] == $row['japanese'] || $myrows[$q2]['japanese'] == $myrows[$q3]['japanese'] || $myrows[$q2]['japanese'] == $myrows[$q1]['japanese'])
-    {
-        //echo "sq2 same.. gogogog";
-        $q2 = $this->randWithout(0, $array_max, array($q1));
-    }
-    while($myrows[$q3]['japanese'] == $row['japanese'] || $myrows[$q3]['japanese'] == $myrows[$q1]['japanese'] || $myrows[$q3]['japanese'] == $myrows[$q2]['japanese'])
-    {
-        //echo "sq3 same.. gogogog";
-        $q3 = $this->randWithout(0, $array_max, array($q2, $q3));
-    }
-    
+    // randWithout: ($from, $to, array $exceptions)
+    $not_random = array_search($row['japanese'], $myrows);
+    $random1 = $this->randWithout(0, count($myrows)-1, array($not_random));
+    $random2 = $this->randWithout(0, count($myrows)-1, array($random1, $not_random));
+    $random3 = $this->randWithout(0, count($myrows)-1, array($random1, $random2, $not_random));
+
     $answeroptionsa = array(
-    0 => $myrows[$q1]['japanese'],
-    1 => $myrows[$q2]['japanese'],
-    2 => $myrows[$q3]['japanese'],
-    3 => $row['japanese']);
+    0 => $myrows[$random1]['japanese'],
+    1 => $myrows[$random2]['japanese'],
+    2 => $myrows[$random3]['japanese'],
+    3 => $myrows[$not_random]['japanese']);
     
     // Shuffle order! (otherwise the correct answer would be the [3] last one)
     shuffle($answeroptionsa);
@@ -214,8 +200,8 @@ $my_plugin = plugin_dir_url('simple-yet-powerful-quiz') . '/simple-yet-powerful-
 
 ?>
 <div class="result-left">
-    <div class="result-header">You got 4 correct answers out of 22</div>
-    <div class="result-text">Correct procentage: 18%</div>
+    <div class="result-header">You got x correct answers out of x</div>
+    <div class="result-text">Correct procentage: x%</div>
 </div>
 
 <div class="clear"></div>

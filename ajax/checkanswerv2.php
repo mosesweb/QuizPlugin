@@ -193,19 +193,12 @@ public function LogResult($correctanswersgiven, $mistakeanswersgiven, $lcategory
 	$catwordtable = $simpleplug->prefixTableName('goiwordcategories');
 	$resulttable = $simpleplug->prefixTableName('goiresults');
 	$categoryid = null;
-
-	$lcategoryIDresult = $wpdb->get_results( 
-		"SELECT id FROM $cattable 
-		WHERE $cattable.slug_name = '$lcategory'", ARRAY_A);
-		
+	
 	$numberofQuestions = 0;
-	foreach($lcategoryIDresult as $cate)
-	{
-		$categoryid = $cate["id"];
-	}
+	
 	$totalqs = 0;
 	//$score = ($correctanswersgiven/$lamountofq)*100;
-	$sqlloguserscore = "INSERT INTO `$resulttable` (`id`, `goicategory_id`, `procent_correctness`, `message`, `user_id`) VALUES (NULL, '$categoryid', '$proctotal', 'Correct: $correctanswersgiven', '".get_current_user_id()."');";
+	$sqlloguserscore = "INSERT INTO `$resulttable` (`id`, `goicategory_id`, `procent_correctness`, `message`, `user_id`) VALUES (NULL, '$lcategory', '$proctotal', 'Correct: $correctanswersgiven', '".get_current_user_id()."');";
 	$wpdb->query($sqlloguserscore);
 	echo $sqlloguserscore;
 }
