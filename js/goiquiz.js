@@ -37,6 +37,8 @@
 		});
 		function firstAgain()
 		{
+			totalcorrect = 0;
+			totalwronganswers = 0;
 
 			$(".result").hide();
 			$(".correct-box .correct").text("0");
@@ -44,35 +46,8 @@
 			$(".result-info-text").html("");
 			$(".answer-options").hide();
 
-			// randomize elements!
-			
-		
-
-			if($('.vocabmode').text() == 'random')
-			{
-				//$('.answer-options').shuffle();
-				/* other */
-				var parent = $(".main_questionsarea");
-				var divs = $(".main_questionsarea .answer-options");
-				while (divs.length) {
-					parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
-				}
-				/* end other */
-				var newposdivs = $('.answer-options');
-				var x = 0;
-				$( newposdivs ).each(function( index ) {
-					var question_number = index+1;
-					var boxclassname = $(this).attr('class').split(' ')[1];
-
-					$(this).removeClass(function (index, className) {
-						return (className.match (/(^|\s)box-\S+/g) || []).join(' ');
-					});
-
-					$(this).find('.current-q').text(question_number);
-					$(this).addClass('box-' + question_number);
+			// todo: shuffle questions
 				
-				});
-			}
 			$(".main_questionsarea").show();
 			$(".answer-options.box-1").show();
 			$(".result-info-word-info").text("");

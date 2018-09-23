@@ -168,10 +168,11 @@ foreach($myrows as $key=>$row)
     <div class=\"clear\"></div></div>";
 
     // randWithout: ($from, $to, array $exceptions)
-    $not_random = array_search($row['japanese'], $myrows);
+    $not_random = array_search($row, $myrows);
     $random1 = $this->randWithout(0, count($myrows)-1, array($not_random));
     $random2 = $this->randWithout(0, count($myrows)-1, array($random1, $not_random));
     $random3 = $this->randWithout(0, count($myrows)-1, array($random1, $random2, $not_random));
+
 
     $answeroptionsa = array(
     0 => $myrows[$random1]['japanese'],
