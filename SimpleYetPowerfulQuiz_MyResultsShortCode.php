@@ -44,40 +44,50 @@ class SimpleYetPowerfulQuiz_MyResultsShortCode extends SimpleYetPowerfulQuiz_Sho
     ON $catgroup.id = $cattable.group_id
 
     WHERE $goiresults.user_id = '$userid'
-    
-    ORDER BY $goiresults.Id DESC
+    ORDER BY $goiresults.result_date DESC
     ";
 
-    $myrows = $wpdb->get_results( $sql, OBJECT);
+    $result = array();
+    $myrows = $wpdb->get_results( $sql, ARRAY_A );
     foreach($myrows as $row)
     {
+        $result[$row['groupname']][] = $row;
 
-        echo "<div style='
-        padding: 10px;
-        margin-top:5px;
-        margin-bottom:5px;
-        background:#eaeaea;
-        '>";
-        if (strtotime($row->result_date) >= strtotime("today"))
-        echo "Today " . date_format(new DateTime($row->result_date), "h:i:s A");
-
-        else if (strtotime($row->result_date) >= strtotime("yesterday"))
-        echo "Yesterday " . date_format(new DateTime($row->result_date), "h:i:s A");
-
-        else 
-        echo date_format( new DateTime($row->result_date), "Y-m-d h:i:s A");
-
-        echo ": " . $row->groupname . " - " . $row->categoryname . " ";
-        echo $row->procent_correctness . "%";   
-        echo "<div style='
-        height: 5px;
-        background: -webkit-gradient(linear, left top, right top, color-stop($row->procent_correctness%,#a6d18c), color-stop($row->procent_correctness%,#f76c81));
-        background: -moz-linear-gradient(left center, #a6d18c $row->procent_correctness%, #f76c81 $row->procent_correctness%);
-        background: -o-linear-gradient(left, #a6d18c $row->procent_correctness%, #f76c81 $row->procent_correctness%);
-        background: linear-gradient(to right, #a6d18c $row->procent_correctness%, #f76c81 $$row->procent_correctness%);
-        '>";      
-        echo "</div></div>";
         
+    }
+    function arraySort($input,$sortkey){
+        foreach ($input as $key=>$val) $output[$val[$sortkey]][]=$val;
+        return $output;
+      }
+      $myArray = arraySort($myrows,'groupname');
+    foreach($myArray as $row => $value)
+    {
+        echo "<b>" . $row . "</b><br />";
+        foreach( $value as $key=>$inner_row)
+        {
+            if($key > 2)
+            break;
+
+            echo "<div style='
+            padding: 10px;
+            margin-top:5px;
+            margin-bottom:5px;
+            background:#eaeaea;
+            '>";
+            if (strtotime($inner_row["result_date"]) >= strtotime("today"))
+            echo "Today " . date_format(new DateTime($inner_row["result_date"]), "h:i:s A");
+            else if (strtotime($inner_row["result_date"]) >= strtotime("yesterday"))
+            echo "Yesterday " . date_format(new DateTime($inner_row["result_date"]), "h:i:s A");
+            else 
+            echo date_format( new DateTime($inner_row["result_date"]), "Y-m-d h:i:s A");
+            echo ": " . $inner_row["groupname"] . " - " . $inner_row["categoryname"] . " ";
+            echo $inner_row["procent_correctness"] . "%";   
+            echo "<div style='
+            height: 5px;
+            '>";      
+            echo "</div></div>";
+        }
+       
     }
     
     $output = ob_get_contents();

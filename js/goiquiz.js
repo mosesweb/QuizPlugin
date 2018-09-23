@@ -67,11 +67,14 @@
 			var levelid = focus_el.find('#level-id').first().text();
 			var corrproc = Math.floor((corr/totalnums) * 100);
 			var ele = $('.answered');
+			
+			// todo: speed things up like this stuff below
+			$('.main_questionsarea').hide();
 
 			registerScore(corr, mist, totalnums, corrproc, levelid);
 			// Show score if finished
 			// todo logic if level or map is finished.
-			$('.main_questionsarea').hide();
+			
 			
 				//alert("ye last");
 				var goodorbad = "Not the greatest score of all time but you did try.";

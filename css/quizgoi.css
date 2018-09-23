@@ -136,4 +136,12 @@ img.repeat-afterquiz {
 {
 	display:none;
 }
+.answer-options
+{
+	display:none;
+}
+.answer-options.box-1
+{
+	display:block;
+}
 /* END QUIZ GOI */
