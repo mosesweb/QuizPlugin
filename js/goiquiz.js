@@ -73,7 +73,7 @@
 				
 				});
 			}
-
+			$(".main_questionsarea").show();
 			$(".answer-options.box-1").show();
 			$(".result-info-word-info").text("");
 

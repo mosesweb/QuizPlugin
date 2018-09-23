@@ -163,7 +163,7 @@ foreach($myrows as $key=>$row)
         echo "<div class=\"newlevel\">new level</div>";
     }
     echo"
-    <div class=\"questionnumber\"><div class='quizcatid'>".$qid."'</div><b>" . $row['qname']. "</b> Question <span class=\"current-q\">$question_level_number</span> / <span class=\"levels-q\"><b>$amountolevelquestions</b></span>| Total questions: <span class=\"total-q\">$amountofquestions</span>. <span class='current_level'>$current_level_display</span> of $numberoflevels</div>
+    <div class=\"questionnumber\"><div class='quizcatid'>".$qid."'</div><b>" . $row['qname']. "</b> Question <span class=\"current-q\">$question_level_number</span> / <span class=\"levels-q\"><b>$amountolevelquestions</b></span> | Total questions: <span class=\"total-q\">$amountofquestions</span>. Current level: <span class='current_level'>$current_level_display</span> / $numberoflevels</div>
     <div class=\"questiontext\">What is <span class=\"questionword\">" . $row['meaning'] . "</span> in Japanese?</div>
     <div class=\"clear\"></div></div>";
 
