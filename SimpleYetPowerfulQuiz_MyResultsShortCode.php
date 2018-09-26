@@ -80,7 +80,7 @@ class SimpleYetPowerfulQuiz_MyResultsShortCode extends SimpleYetPowerfulQuiz_Sho
             echo "Yesterday " . date_format(new DateTime($inner_row["result_date"]), "h:i:s A");
             else 
             echo date_format( new DateTime($inner_row["result_date"]), "Y-m-d h:i:s A");
-            echo ": " . $inner_row["groupname"] . " - " . $inner_row["categoryname"] . " ";
+            echo "<br /><b> " . $inner_row["categoryname"] . "</b>: ";
             echo $inner_row["procent_correctness"] . "%";   
             echo "<div style='
             height: 5px;

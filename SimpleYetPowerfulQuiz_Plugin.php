@@ -161,18 +161,18 @@ class SimpleYetPowerfulQuiz_Plugin extends SimpleYetPowerfulQuiz_LifeCycle {
           );");
 
           $wpdb->query("
-          INSERT INTO `$catgroup` (`id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '0', 'Quiz 1', 'quiz-1', '', '1', 'My first category', 'low', '', '2018-01-15', '1', '0', 'Quiz 1', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
+          INSERT INTO `$catgroup` (`id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '0', 'Quiz 1', 'quiz-1', '', '1', 'Example quiz', 'low', '', '2018-01-15', '1', '0', 'Quiz 1', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
           ");
 
           $wpdb->query("
-          INSERT INTO `$catgroup` (`id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '0', 'Quiz 2', 'quiz-2', '', '1', 'My first category', 'low', '', '2018-01-15', '1', '0', 'Quiz 2', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
+          INSERT INTO `$catgroup` (`id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '0', 'Quiz 2', 'quiz-2', '', '1', 'Second example quiz', 'low', '', '2018-01-15', '1', '0', 'Quiz 2', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
           ");
 
           $wpdb->query("
-          INSERT INTO `$cattable` (`id`, `group_id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '1', '0', 'Level 1', 'level-1', '', '1', 'My first level', 'low', '', '2018-01-15', '1', '0', 'My first category', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
+          INSERT INTO `$cattable` (`id`, `group_id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '1', '0', 'Level 1', 'level-1', '', '1', 'My first level', 'low', '', '2018-01-15', '1', '0', 'a level', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
           ");
           $wpdb->query("
-          INSERT INTO `$cattable` (`id`, `group_id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '2', '0', 'Level 1', 'level-1', '', '1', 'My first level', 'low', '', '2018-01-15', '1', '0', 'My first category', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
+          INSERT INTO `$cattable` (`id`, `group_id`, `parent`, `name`, `slug_name`, `category_image`, `quiz_ready`, `quiz_desc`, `difficulty`, `quiz_image`, `date_created`, `visable`, `featured`, `extra`, `extra_author`, `kanji_quiz_support`, `show_images`, `quiz_extra`, `help_tools`, `random_order`, `quiz_image_show`) VALUES (NULL, '2', '0', 'Level 1', 'level-1', '', '1', 'My first level', 'low', '', '2018-01-15', '1', '0', 'a level', 'japanesegoi', '0', '1', NULL, '1', '0', '1');
           ");
 
           $wpdb->query("
@@ -310,6 +310,8 @@ class SimpleYetPowerfulQuiz_Plugin extends SimpleYetPowerfulQuiz_LifeCycle {
         include_once('SimpleYetPowerfulQuiz_QuizShortCode.php');
         include_once('SimpleYetPowerfulQuiz_MyResultsShortCode.php');
         include_once('SimpleYetPowerfulQuiz_QuizMapShortCode.php');
+        include_once('SimpleYetPowerfulQuiz_ItemsShortCode.php');
+        include_once('SimpleYetPowerfulQuiz_CreateQuizShortCode.php');
 
         $sc = new SimpleYetPowerfulQuiz_QuizShortCode();
         $sc->register('show-quiz-app'); 
@@ -319,6 +321,12 @@ class SimpleYetPowerfulQuiz_Plugin extends SimpleYetPowerfulQuiz_LifeCycle {
 
         $sc_map = new SimpleYetPowerfulQuiz_QuizMapShortCode();
         $sc_map->register('quiz-map'); 
+
+        $sc_items = new SimpleYetPowerfulQuiz_ItemsShortCode();
+        $sc_items->register('quiz-items'); 
+
+        $sc_create = new SimpleYetPowerfulQuiz_CreateQuizShortCode();
+        $sc_create->register('create-quiz');
 
         // Register AJAX hooks
         // http://plugin.michael-simpson.com/?page_id=41

@@ -145,3 +145,87 @@ img.repeat-afterquiz {
 	display:block;
 }
 /* END QUIZ GOI */
+
+/* QUIZ ITEMS */
+#quiz-item-splash {
+	width: 100%;
+	display: -webkit-flex; /* Safari */
+	display: flex;
+}
+
+.quiz-item {
+	padding: 10px;
+	background: #d3f6d7;
+	-webkit-flex: 1;  /* Safari 6.1+ */
+	-ms-flex: 1;  /* IE 10 */    
+	flex: 1;
+	max-width: 325px;
+}
+.inner-quiz-item-area
+{
+	padding: 10px;
+}
+.quiz-item:nth-child(1)
+{
+	margin-right:20px;
+}
+.flexcontainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* You can set flex-wrap and
+		 flex-direction individually */
+	flex-direction: row;
+	flex-wrap: wrap;
+	/* Or do it all in one line
+		with flex flow */
+	flex-flow: row wrap;
+	/* tweak where items line
+		 up on the row
+		 valid values are: flex-start,
+		 flex-end, space-between,
+		 space-around, stretch */
+	align-content: flex-end;
+}
+.flexcontainer>div {
+	height: 150px;
+	width: 400px;
+	background-color: #d3f6d7;
+	margin: 3px;
+}
+.quiz-header-img
+{
+	width: 300px;
+	background: black;
+}
+.quiz-header-img.img-in-review img
+{
+	opacity: 0.5;
+}
+.quiz-header-img.img-in-review
+{
+	position:relative;
+}
+.quiz-header-img .img-in-review-text
+{
+	position:absolute;
+	top: 50%; left: 0; right: 0;
+	text-align: center;
+	font-weight: bold;
+	color:white;
+	opacity: 1;
+}
+.map-area
+{
+	background:#eaeaea;
+	padding: 20px;
+}
+.map-area .level-area
+{
+	
+}
+.map-area .level-area .word
+{
+	padding: 5px;
+	border: 1px solid #ccaaac;
+}
