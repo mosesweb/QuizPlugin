@@ -1,31 +1,19 @@
 <div class="map-area">
     <h1>New quiz</h1>
-    <form>
         <label>Name</label>
         <input name="mapname" type="text" /> <br />
      
-        <h1>Vocabulary</h1>
-        <div class="level-area">
-        
-        <table style="">
-        <tbody>
-        <tr>
-        <td style="">Meaning</td>
-        <td style="">Japanese</td>
-        <td style="">Hiragana</td>
-        <td style="">Katakana</td>
-        <td style="">Romaji</td>
-        </tr>
-        <?php include ("html/word-row.html"); ?>
-        </tbody>
-        </table>
+        <?php include("map.php"); ?>
         <script>
          var el = "";
-         var allGood=true;
         jQuery(".word-row input").live('change', function()
         {
-           el = jQuery(this).parent().parent().parent().find(".word-row").last();
-            allGood=true;
+            jQuery(this).closest('.level-area').find(".word-row").each(function(index)
+            {
+                jQuery(this).find("td.order").text(index+1);
+            });
+           el = jQuery(this).closest(".word-row").last();
+            var allGood=true;
                 var lastInputField=0;
                 elements = jQuery(el).find("input.meaning, input.japanese, input.hiragana, input.katakana, input.romaji");
                 jQuery(elements).each(function() {
@@ -37,24 +25,59 @@
                 });
                 if(allGood)
                 {                
-                    jQuery.get("/wp-content/plugins/<?php echo $dirname ?>/includes/html/word-row.html", function(data){
-                    jQuery("tbody").before().append(data);
+                    jQuery.get("/wp-content/plugins/<?php echo $dirname ?>/includes/html/word-row.php", function(data){
+                    jQuery(el).closest('tbody').first().before().append(data);
                     allGood = false;
                 });
             }
-
-        })
+            jQuery('.level-area').each(function() 
+            {
+                if(jQuery(this).find('.word-row').length < 3)
+                {
+                    jQuery(".add-new-level").hide();
+                }
+            });
+            if(jQuery(this).closest('.level-area').find(".word-row").length > 3)
+            {
+                jQuery(".add-new-level").show();
+            }
+        });
+        jQuery(".add-new-level").live('click', function()
+        {
+            jQuery.get("/wp-content/plugins/<?php echo $dirname ?>/includes/map.php", 
+            {
+                level_number: jQuery('.level-area').length+1
+            }, function(data) {
+               jQuery('.level-area').after(data);
+            });
+            
+        });
         </script>
         <!-- DivTable.com -->
         
-        
-        
-        
-        
-        <div class="word">
-            
-          
         </div>
-        </div>
-    </form>
+        <div class="add-new-level">Add level</div>
+        <div id="create-quiz">Create quiz</div>
+
+    <script>
+    jQuery('#create-quiz').live('click', function()
+    {
+        var forms = [];
+        var thing = [];
+        //forms = jQuery('.create-quiz-form').serialize();
+
+        jQuery('.create-quiz-form').each(function()
+        {
+            forms.push(jQuery(this).serialize());
+        });
+        jQuery.post("/wp-content/plugins/<?php echo $dirname ?>/includes/create_quiz_post.php", 
+        {
+            data: forms,
+        }, 
+        function(result){
+            alert(result);
+            console.log(result);
+        });
+    });
+    </script>
 </div>

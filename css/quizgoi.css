@@ -229,3 +229,7 @@ img.repeat-afterquiz {
 	padding: 5px;
 	border: 1px solid #ccaaac;
 }
+.add-new-level
+{
+	display:none;
+}
