@@ -1,6 +1,6 @@
 <form name="create-quiz-form[]" id="create-quiz-form-<?php echo $_GET['level_number']; ?>" class="create-quiz-form">
 
-<h1>Vocabulary <?php echo $_GET['level_number'] ?> </h1>
+<input type="hidden" name="levelname" value="Vocabulary <?php echo $_GET['level_number'] ?>" /><h1>Vocabulary <?php echo $_GET['level_number'] ?> </h1>
         <div class="level-area" data-levelid="<?php echo $_GET['level_number'] ?>">
         
         <table style="">
